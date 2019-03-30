@@ -34,7 +34,7 @@ def register():
     password2 = request.form.get("password2")
 
     # Check if user exists, error if not
-    user_exists = db.execute("SELECT COUNT(*) FROM users WHERE email = :email", {"email": email}).fetchone()
+    user_exists = db.execute("SELECT COUNT(*) FROM users WHERE email = :email", {"email": email}).fetchall()
     for user_exist in user_exists:
         if user_exist > 0:
             # User already exists
@@ -54,3 +54,28 @@ def register():
     db.commit()
 
     return render_template("register_success.html", title="Success", data=email)
+
+@app.route("/login", methods=["POST"])
+def login():
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    # Check if user exists, error if not
+    users = db.execute("SELECT * FROM users WHERE email = :email", {"email": email}).fetchall()
+
+
+    for user in users:
+
+        # Check password
+        if hashlib.md5(password.encode()).hexdigest() != user.password_hash:
+            print(f"Passwords do not match")
+            return render_template("index.html", modal_title="Error", modal_body="Incorrect password.")
+
+        else:
+            print(f"Passwords match")
+
+
+        return render_template("register_success.html", title="Logged in", data=user)
+
+    # If no user found, throw an error
+    return render_template("index.html", modal_title="Error", modal_body="A user with this email address could not be found. Please register.")
