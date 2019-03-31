@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block heading %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+  <h1>{{ book.title }}</h1>
+  <h3>By {{ book.author }} ({{ book.year }})</h3>
+  <p><b>ISBN:</b> {{ book.isbn }}</p>
+  {% if goodreads != [] %}
+  <p><b>Average Goodreads score:</b> {{goodreads.average_rating}} ({{goodreads.reviews_count}} reviews)</p>
+  {% endif %}
+  <h2>Reviews</h2>
+  {% if reviews == [] %}
+  <p>
+    No reviews yet
+  </p>
+  {% else %}
+    {% for review in reviews %}
+      <div class="card">
+        <div class="card-body">
+          <b>Rating:</b> {{review.score}}/5<br />
+          <b>Review:</b> {{review.review}}<br />
+          <b>Date:</b> {{review.timestamp}}
+        </div>
+
+      </div>
+    {% endfor %}
+  {% endif %}
+  {% if user_has_reviewed != 1 %}
+  <h2>Leave a review</h2>
+  <form action="{{ url_for('submit_review', isbn = book.isbn) }}" method="post">
+    <div class="form-group">
+      <div class="form-text">
+        On a scale of 1 to 5, how much did you enjoy {{ book.title }}?
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="rating" id="rating1" value="1" required>
+        <label class="form-check-label" for="rating1">1</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="rating" id="rating2" value="2">
+        <label class="form-check-label" for="rating2">2</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="rating" id="rating3" value="3">
+        <label class="form-check-label" for="rating3">3</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="rating" id="rating4" value="4">
+        <label class="form-check-label" for="rating4">4</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="rating" id="rating5" value="5">
+        <label class="form-check-label" for="rating5">5</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="review">What would you tell a friend about this book?</label>
+      <textarea class="form-control" id="review" rows="5" name="review"></textarea>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary">Submit review</button>
+      </div>
+  </form>
+  {% endif %}
+{% endblock %}

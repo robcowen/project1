@@ -3,7 +3,7 @@
     <title>
       {% block title %}{% endblock %}
     </title>
-    <link rel="stylesheet" href="styles.css?1.00">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -12,6 +12,7 @@
   </head>
   <body>
     <div class="container-fluid">
+      {% if session != [] %}
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="index.html">RobReads</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,28 +21,24 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="{{ url_for('index_form') }}">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="betta.html">Betta</a>
+              <a class="nav-link" href="{{ url_for('signOut') }}">Sign out</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="platies.html">Platies</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="tetra.html">Tetra</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="shrimp.html">Shrimp</a>
-            </li>
+
           </ul>
+          <span class="nav-item">
+            <a class="nav-link disabled" href="#">{{ session['first_name'] }} {{ session['last_name'] }}</a>
+          </span>
         </div>
       </nav>
+      {% endif %}
       <section class="row">
         <div class="col">
           <h1>{% block heading %}{% endblock %}</h1>
           <div>
-            {% block body %}{% endblock %}
+            {% block content %}{% endblock %}
           </div>
           <div class="modal" id="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
