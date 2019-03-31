@@ -59,7 +59,7 @@ def login():
             # Log user in
             login_user(user.id, user.email, user.first_name, user.last_name)
 
-        return render_template("home.html", modal_title="Welcome back, " + session['first_name'], modal_body="It's good to see you again", data=session)
+        return render_template("home.html", data=session)
 
     # If no user found, throw an error
     return render_template("index.html", modal_title="Error", modal_body="A user with this email address could not be found. Please register.")
@@ -117,7 +117,7 @@ def signOut():
 def book_search():
     search = request.args.get("search")
 
-    results = db.execute("SELECT * FROM books WHERE isbn LIKE :search OR title LIKE :search OR author LIKE :search", {"search": "%"+search+"%"}).fetchall()
+    results = db.execute("SELECT * FROM books WHERE LOWER(isbn) LIKE LOWER(:search) OR LOWER(title) LIKE LOWER(:search) OR LOWER(author) LIKE LOWER(:search)", {"search": "%"+search+"%"}).fetchall()
 
 
     return render_template("search_results.html", results=results, search=search)
