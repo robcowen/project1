@@ -184,12 +184,15 @@ def api(isbn):
         author = book.author
         year = book.year
 
-
+        # Set default values for review_count and average_score
+        review_count = 0
+        average_score = 0
 
         reviews = db.execute("SELECT COUNT(*), AVG(score) FROM reviews WHERE bookid IN (SELECT id FROM books WHERE isbn = :isbn)", {"isbn": isbn}).fetchall()
         for review in reviews:
             review_count = review[0]
-            average_score = float(review[1])
+            if review_count > 0:
+                average_score = float(review[1])
 
         response = {"title": title, "author": author, "year": year, "isbn": isbn, "review_count": review_count, "average_score": average_score}
 
